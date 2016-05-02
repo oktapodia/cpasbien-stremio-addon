@@ -1,0 +1,35 @@
+{
+  "name": "cpasbien-stremio-addon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cheerio": "^0.20.0",
+    "cloudscraper": "^1.2.2",
+    "domhandler": "^2.3.0",
+    "htmlparser2": "^3.9.0",
+    "q": "^1.4.1",
+    "soupselect": "^0.2.0",
+    "stremio-addons": "^1.30.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/oktapodia/cpasbien-stremio-addon.git"
+  },
+  "keywords": [
+    "cpasbien",
+    "stremio",
+    "addon"
+  ],
+  "author": "BRAMILLE Sebastien",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oktapodia/cpasbien-stremio-addon/issues"
+  },
+  "homepage": "https://github.com/oktapodia/cpasbien-stremio-addon#readme"
+}

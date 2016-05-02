@@ -24,15 +24,9 @@ var methods = { };
 var addon = new Stremio.Server(methods, { stremioget: true }, manifest);
 
 
-var getByLink = function (link) {
-    var deferred = Q.defer();
+var getByLink = function (link, done) {
     cloudscraper.get(link, function (error, response, body) {
-        if (error) {
-            console.log('Error occurred');
-            console.log(error);
-
-            return deferred.reject(error);
-        }
+        if (error) return done(error);
 
         var $ = cheerio.load(body);
 
@@ -53,14 +47,11 @@ var getByLink = function (link) {
 
         };
 
-        return deferred.resolve(movie);
+        done(null, movie);
     });
-
-    return deferred.promise;
 };
 
-var getAll = function(host) {
-    var deferred = Q.defer();
+var getAll = function(host, next) {
     cloudscraper.get(host, function (error, response, body) {
         if (error) {
             console.log('Error occurred');
@@ -72,23 +63,23 @@ var getAll = function(host) {
         var movies = [];
         var $ = cheerio.load(body);
 
-        $('.ligne0, .ligne1').each(function (index, element) {
-            var link = $(element).find('a').attr('href');
+        var links = [];
 
-            getByLink(link).then(function (response) {
-                movies.push(response);
-            }, function (err) {
-                console.log(err);
-            });
+        $('.ligne0, .ligne1').each(function (index, element) {
+            links.push($(element).find('a').attr('href'));
         });
 
-        console.log(movies);
-
-
-        return deferred.resolve(movies);
+        async.eachSeries(links, function(link, done){
+          getByLink(link, done(err, response){
+            if(err) return done(err);
+            movies.push(response)
+            done()
+          }, function(err){
+            console.log(movies);
+            next(err);
+          })
+        })
     });
-
-    return deferred.promise;
 };
 
 
@@ -101,14 +92,11 @@ methods["meta.find"] = function(args, callback) {
     // fetch some HTML...
 
     var host = 'http://www.cpasbien.cm/films/action-aventures/';
-    getAll(host).then(function (response) {
-        console.log('good!');
-        console.log(response);
-        callback({}, response);
-    }, function (err) {
-        console.log(err);
-        return;
-    });
+    getAll(host, function(err, response){
+      if (err) return console.log('J\'ai fais de la merde !', err);
+      console.log(response);
+      callback(null, response);
+    })
 };
 
 

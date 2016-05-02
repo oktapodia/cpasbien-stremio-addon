@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "async": "^1.5.2",
     "cheerio": "^0.20.0",
     "cloudscraper": "^1.2.2",
     "domhandler": "^2.3.0",
